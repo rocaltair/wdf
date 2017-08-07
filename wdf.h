@@ -5,7 +5,8 @@
 extern "C" {
 #endif
 
-typedef uint64_t offset_t;
+#include <sys/types.h>
+#include <stdint.h>
 
 typedef ssize_t (*wdf_write_cb)(off_t offset, const void *buf, size_t sz, void *ud);
 typedef ssize_t (*wdf_read_cb)(off_t offset, void *buf, size_t sz, void *ud);
@@ -21,18 +22,22 @@ typedef struct wdf_item_s wdf_item_t;
 typedef struct wdf_writer_s wdf_writer_t;
 typedef struct wdf_reader_s wdf_reader_t;
 
-wdf_writer_t *wdf_writer_open(wdf_write_cb *cb, void *ud);
+wdf_writer_t *wdf_writer_open(wdf_write_cb cb, void *ud);
 int wdf_append_file(wdf_writer_t *w,
 		     const char *path,
 		     const void *buf, size_t sz);
 int wdf_write(wdf_writer_t *w);
 void wdf_writer_close(wdf_writer_t *w);
 
-wdf_reader_t *wdf_reader_open(wdf_read_cb *cb, void *ud);
+wdf_reader_t *wdf_reader_open(wdf_read_cb cb, void *ud);
 ssize_t wdf_read(wdf_reader_t *r,
 		 const char *path,
 		 void *buf, size_t sz);
 void wdf_reader_close(wdf_reader_t *r);
+
+uint32_t bkrd_hash(const char *str);
+uint32_t ap_hash(const char *str);
+uint32_t djb_hash(const char *str);
 
 #if defined (__cplusplus)
 }	/*end of extern "C"*/
